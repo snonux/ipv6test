@@ -5,6 +5,8 @@
 use strict;
 use warnings;
 
+my $server_name = $ENV{SERVER_NAME} // 'ipv6test.f3s.buetow.org';
+
 print <<END;
 Content-type: text/html
 
@@ -18,21 +20,27 @@ Congratulations, you have connected to a server that will display your method of
 <br /><br />
 Nevertheless, please choose your destiny:
 <ul>
-	<li><a href="http://ipv6.buetow.org">ipv6.buetow.org</a> for IPv6 & IPv4 Test</li>
-	<li><a href="http://test4.ipv6.buetow.org">test4.ipv6.buetow.org</a> for IPv4 Only Test</li>
-	<li><a href="http://test6.ipv6.buetow.org">test6.ipv6.buetow.org</a> for IPv6 Only Test</li>
+	<li><a href="https://ipv6test.f3s.buetow.org">ipv6test.f3s.buetow.org</a> for IPv6 & IPv4 Test (Dual Stack)</li>
+	<li><a href="https://ipv4.ipv6test.f3s.buetow.org">ipv4.ipv6test.f3s.buetow.org</a> for IPv4 Only Test</li>
+	<li><a href="https://ipv6.ipv6test.f3s.buetow.org">ipv6.ipv6test.f3s.buetow.org</a> for IPv6 Only Test</li>
 </ul>
 If your browser times-out when trying to connect to this server then you do not have an IPv6 or IPv4 path (depends on which test you are running) to the server. If your browser returns an error that the host cannot be found then the DNS servers you are using are unable to resolve the AAAA or A DNS record (depends on which test you are running again) for the server. If your browser is able to connect to the "IPv6 Only Test", yet using the "IPv6 & IPv4 Test" returns a page stating you are using IPv4, then your browser and/or IP stack in your machine are preferring IPv4 over IPv6. It also might be that your operating system supports IPv6 but your web-browser doesn't.
 END
 
-if ($ENV{SERVER_NAME} eq 'ipv6.buetow.org') {
-	print "<h3>IPv6 & IPv4 Test Results:</h3>\n";
-
-} elsif ($ENV{SERVER_NAME} eq 'test6.ipv6.buetow.org') {
+if ($server_name =~ /^ipv6test\.f3s\.buetow\.org$/) {
+	print "<h3>IPv6 & IPv4 Test Results (Dual Stack):</h3>\n";
+} elsif ($server_name =~ /^ipv6\.ipv6test\.f3s\.buetow\.org$/) {
 	print "<h3>IPv6 Only Test Results:</h3>\n";
-
-} elsif ($ENV{SERVER_NAME} eq 'test4.ipv6.buetow.org') {
+} elsif ($server_name =~ /^ipv4\.ipv6test\.f3s\.buetow\.org$/) {
 	print "<h3>IPv4 Only Test Results:</h3>\n";
+} elsif ($server_name eq 'ipv6.buetow.org') {
+	print "<h3>IPv6 & IPv4 Test Results:</h3>\n";
+} elsif ($server_name eq 'test6.ipv6.buetow.org') {
+	print "<h3>IPv6 Only Test Results:</h3>\n";
+} elsif ($server_name eq 'test4.ipv6.buetow.org') {
+	print "<h3>IPv4 Only Test Results:</h3>\n";
+} else {
+	print "<h3>Test Results:</h3>\n";
 }
 
 print "<pre>You are using <b>" . do {
