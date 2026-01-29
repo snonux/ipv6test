@@ -82,7 +82,7 @@ $digserver
 $digserver0
 </pre>
 <hr />
-Thanks for visiting, please recommend this test to your friends and colleagues. Any comments go to <a href="http://contact.buetow.org">Paul Buetow</a>.
+Thanks for visiting, please recommend this test to your friends and colleagues. Any comments go to <a href="https://paul.buetow.org">Paul Buetow</a>.
 </body>
 </html>
 END
