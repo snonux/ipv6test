@@ -1,7 +1,0 @@
-This is a quick and dirty perl based IPv6 test website.
-
-It needs the following hosts configured:
-
-ipv6.buetow.org (IPv4 and IPv6)
-test4.ipv6.buetow.org (IPv4 only)
-test6.ipv6.buetow.org (IPv6 only)
