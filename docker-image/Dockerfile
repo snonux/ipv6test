@@ -5,9 +5,10 @@ RUN apk update && apk add --no-cache \
     bind-tools \
     && rm -rf /var/cache/apk/*
 
-# Enable CGI module
+# Enable CGI and remoteip modules
 RUN sed -i 's/#LoadModule cgid_module/LoadModule cgid_module/' /usr/local/apache2/conf/httpd.conf && \
     sed -i 's/#LoadModule cgi_module/LoadModule cgi_module/' /usr/local/apache2/conf/httpd.conf && \
+    sed -i 's/#LoadModule remoteip_module/LoadModule remoteip_module/' /usr/local/apache2/conf/httpd.conf && \
     echo 'ScriptAlias /cgi-bin/ "/usr/local/apache2/cgi-bin/"' >> /usr/local/apache2/conf/httpd.conf && \
     echo '<Directory "/usr/local/apache2/cgi-bin">' >> /usr/local/apache2/conf/httpd.conf && \
     echo '    AllowOverride None' >> /usr/local/apache2/conf/httpd.conf && \
@@ -15,7 +16,11 @@ RUN sed -i 's/#LoadModule cgid_module/LoadModule cgid_module/' /usr/local/apache
     echo '    Require all granted' >> /usr/local/apache2/conf/httpd.conf && \
     echo '</Directory>' >> /usr/local/apache2/conf/httpd.conf && \
     echo 'DirectoryIndex index.pl index.html' >> /usr/local/apache2/conf/httpd.conf && \
-    echo 'AddHandler cgi-script .pl' >> /usr/local/apache2/conf/httpd.conf
+    echo 'AddHandler cgi-script .pl' >> /usr/local/apache2/conf/httpd.conf && \
+    echo 'RemoteIPHeader X-Forwarded-For' >> /usr/local/apache2/conf/httpd.conf && \
+    echo 'RemoteIPInternalProxy 10.0.0.0/8' >> /usr/local/apache2/conf/httpd.conf && \
+    echo 'RemoteIPInternalProxy 192.168.0.0/16' >> /usr/local/apache2/conf/httpd.conf && \
+    echo 'RemoteIPInternalProxy 172.16.0.0/12' >> /usr/local/apache2/conf/httpd.conf
 
 # Copy the CGI script
 COPY index.pl /usr/local/apache2/cgi-bin/index.pl
