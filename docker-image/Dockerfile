@@ -27,7 +27,7 @@ COPY index.pl /usr/local/apache2/cgi-bin/index.pl
 RUN chmod 755 /usr/local/apache2/cgi-bin/index.pl
 
 # Create a redirect from / to /cgi-bin/index.pl
-RUN echo '<meta http-equiv="refresh" content="0;url=/cgi-bin/index.pl">' > /usr/local/apache2/htdocs/index.html
+RUN echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0; url=/cgi-bin/index.pl"><title>Redirecting...</title></head><body><p>Redirecting to <a href="/cgi-bin/index.pl">IPv6 Test</a>...</p></body></html>' > /usr/local/apache2/htdocs/index.html
 
 EXPOSE 80
 
