@@ -54,12 +54,20 @@ print "<pre>You are using <b>" . do {
 } . "</b>\n";
 
 
-chomp (my $remote = `host $ENV{REMOTE_ADDR}`);
-chomp (my $server = `host $ENV{SERVER_ADDR}`);
-chomp (my $server0 = `host $ENV{SERVER_NAME}`);
-chomp (my $digremote = `dig -x $ENV{REMOTE_ADDR}`);
-chomp (my $digserver = `dig -x $ENV{SERVER_ADDR}`);
-chomp (my $digserver0 = `dig -t any $ENV{SERVER_NAME}`);
+sub html_escape {
+    my $str = shift;
+    $str =~ s/&/&amp;/g;
+    $str =~ s/</&lt;/g;
+    $str =~ s/>/&gt;/g;
+    return $str;
+}
+
+chomp (my $remote = html_escape(`host $ENV{REMOTE_ADDR}`));
+chomp (my $server = html_escape(`host $ENV{SERVER_ADDR}`));
+chomp (my $server0 = html_escape(`host $ENV{SERVER_NAME}`));
+chomp (my $digremote = html_escape(`dig -x $ENV{REMOTE_ADDR}`));
+chomp (my $digserver = html_escape(`dig -x $ENV{SERVER_ADDR}`));
+chomp (my $digserver0 = html_escape(`dig -t any $ENV{SERVER_NAME}`));
 
 print <<END;
 Client address: $ENV{REMOTE_ADDR}
