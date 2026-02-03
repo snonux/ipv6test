@@ -5,11 +5,19 @@ RUN apk update && apk add --no-cache \
     bind-tools \
     && rm -rf /var/cache/apk/*
 
-# Enable CGI and remoteip modules
+# Enable CGI and remoteip modules, configure for non-root
 RUN sed -i 's/#LoadModule cgid_module/LoadModule cgid_module/' /usr/local/apache2/conf/httpd.conf && \
     sed -i 's/#LoadModule cgi_module/LoadModule cgi_module/' /usr/local/apache2/conf/httpd.conf && \
     sed -i 's/#LoadModule remoteip_module/LoadModule remoteip_module/' /usr/local/apache2/conf/httpd.conf && \
+    sed -i 's/^User .*/User app/' /usr/local/apache2/conf/httpd.conf && \
+    sed -i 's/^Group .*/Group app/' /usr/local/apache2/conf/httpd.conf && \
     sed -i 's/^Listen 80$/Listen 8080/' /usr/local/apache2/conf/httpd.conf && \
+    sed -i 's|^ErrorLog .*|ErrorLog /var/log/apache2/error.log|' /usr/local/apache2/conf/httpd.conf && \
+    sed -i 's|^CustomLog .*|CustomLog /var/log/apache2/access.log combined|' /usr/local/apache2/conf/httpd.conf && \
+    # Add PidFile directive right after ServerRoot (must be early in config)
+    sed -i '/^ServerRoot/a PidFile "/var/run/apache2/httpd.pid"' /usr/local/apache2/conf/httpd.conf && \
+    # Configure cgid ScriptSock right after the module is loaded
+    sed -i '/#Scriptsock cgisock/c\    Scriptsock /var/run/apache2/cgisock' /usr/local/apache2/conf/httpd.conf && \
     echo 'ScriptAlias /cgi-bin/ "/usr/local/apache2/cgi-bin/"' >> /usr/local/apache2/conf/httpd.conf && \
     echo '<Directory "/usr/local/apache2/cgi-bin">' >> /usr/local/apache2/conf/httpd.conf && \
     echo '    AllowOverride None' >> /usr/local/apache2/conf/httpd.conf && \
@@ -28,8 +36,10 @@ COPY index.pl /usr/local/apache2/cgi-bin/index.pl
 RUN chmod 755 /usr/local/apache2/cgi-bin/index.pl
 
 # Run as non-root
-RUN addgroup -S app && adduser -S -G app app && \
-    chown -R app:app /usr/local/apache2/logs /usr/local/apache2/htdocs /usr/local/apache2/cgi-bin /usr/local/apache2/conf
+RUN addgroup -S -g 1000 app && adduser -S -D -H -u 1000 -G app app && \
+    chown -R app:app /usr/local/apache2/htdocs /usr/local/apache2/cgi-bin /usr/local/apache2/conf /usr/local/apache2/logs && \
+    mkdir -p /var/run/apache2 /var/log/apache2 && \
+    chown -R app:app /var/run/apache2 /var/log/apache2
 USER app
 
 # Create a redirect from / to /cgi-bin/index.pl
