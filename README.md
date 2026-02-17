@@ -11,11 +11,11 @@ The website can be run using the Docker image in the `docker-image` directory.
 The website needs the following hosts configured (or similar hosts):
 
 - `ipv6test.f3s.buetow.org` (IPv4 and IPv6)
-- `test4.ipv6test.f3s.buetow.org` (IPv4 only)
-- `test6.ipv6test.f3s.buetow.org` (IPv6 only)
+- `ipv4.ipv6test.f3s.buetow.org` (IPv4 only)
+- `ipv6.ipv6test.f3s.buetow.org` (IPv6 only)
 
 ## Try it out
 
 * https://ipv6test.f3s.buetow.org
-* https://test4.ipv6test.f3s.buetow.org
-* https://test6.ipv6test.f3s.buetow.org
+* https://ipv4.ipv6test.f3s.buetow.org
+* https://ipv6.ipv6test.f3s.buetow.org
