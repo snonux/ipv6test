@@ -1,9 +1,20 @@
-FROM httpd:2.4-alpine
+# Apache httpd 2.4.70 base, built by `just base` from the official
+# docker-library/httpd Dockerfile at a pinned commit (it verifies the Apache
+# tarball SHA-256 and GPG signature). The official Docker Hub image newest at
+# 2026-11-08 is httpd:2.4.69-alpine3.24, whose mod_cgid answers 503 to any
+# request header over 4096 bytes (fixed in 2.4.70, PR 70270). Once an official
+# httpd:2.4.70-alpine (or newer) image is published, switch back to
+# FROM httpd:<version>-alpine<release>@sha256:<index digest>. Always build
+# under a NEW image tag (see Justfile VERSION).
+ARG HTTPD_BASE
+FROM ${HTTPD_BASE}
 
-RUN apk update && apk add --no-cache \
+# apk upgrade pulls Alpine security fixes published after the base image was
+# built (e.g. zlib 1.4-r0 for CVE-2026-4738 on 2026-11-06); the immutable
+# image tag freezes the resulting package set.
+RUN apk upgrade --no-cache && apk add --no-cache \
     perl \
-    bind-tools \
-    && rm -rf /var/cache/apk/*
+    bind-tools
 
 # Enable CGI and remoteip modules, configure for non-root
 RUN sed -i 's/#LoadModule cgid_module/LoadModule cgid_module/' /usr/local/apache2/conf/httpd.conf && \
