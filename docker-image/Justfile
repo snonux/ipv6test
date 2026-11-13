@@ -1,21 +1,12 @@
 # Image tag: app version plus runtime-rebuild suffix. Bump it for every
 # rebuild; a pushed tag is immutable and must never be overwritten.
-VERSION := "1.6.2-runtime20261108"
+VERSION := "1.6.2-runtime20261113"
 REGISTRY := "r0.lan.buetow.org:30001"
 IMAGE := "ipv6test"
 
-# docker-library/httpd commit "Update to 2.4.70" (2026-11-06); the base tag
-# names the httpd version, Alpine branch and source commit.
-HTTPD_DL_COMMIT := "2d12c5e41d57a203107137dec723e807b8ea3cff"
-HTTPD_BASE := "localhost/httpd-dl:2.4.70-alpine3.24-dl2d12c5e"
-
-# Build the httpd base from the official docker-library source
-base:
-	docker build -t {{HTTPD_BASE}} "https://github.com/docker-library/httpd.git#{{HTTPD_DL_COMMIT}}:2.4/alpine"
-
 # Build the Docker image
-build: base
-	docker build --build-arg HTTPD_BASE={{HTTPD_BASE}} -t {{IMAGE}}:{{VERSION}} .
+build:
+	docker build -t {{IMAGE}}:{{VERSION}} .
 
 # Build and push to f3s registry
 f3s: build

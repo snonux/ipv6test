@@ -1,13 +1,12 @@
-# Apache httpd 2.4.70 base, built by `just base` from the official
-# docker-library/httpd Dockerfile at a pinned commit (it verifies the Apache
-# tarball SHA-256 and GPG signature). The official Docker Hub image newest at
-# 2026-11-08 is httpd:2.4.69-alpine3.24, whose mod_cgid answers 503 to any
-# request header over 4096 bytes (fixed in 2.4.70, PR 70270). Once an official
-# httpd:2.4.70-alpine (or newer) image is published, switch back to
-# FROM httpd:<version>-alpine<release>@sha256:<index digest>. Always build
-# under a NEW image tag (see Justfile VERSION).
-ARG HTTPD_BASE
-FROM ${HTTPD_BASE}
+# Official Docker Hub httpd image (Apache httpd 2.4.71 on Alpine 3.24), pinned
+# by its multi-arch OCI index digest so a re-pushed tag cannot change the base;
+# 2.4.71-alpine and 2.4.71-alpine3.24 name the same index (checked 2026-11-13).
+# The official 2.4.69 image was skipped because its mod_cgid answered 503 to
+# any request header over 4096 bytes (fixed in 2.4.70, PR 70270); 2.4.71 was
+# re-tested with a 5000-byte header before use. To update, resolve the new
+# tag's index digest (`skopeo inspect --raw docker://httpd:<tag> | sha256sum`)
+# and build under a NEW image tag (see Justfile VERSION).
+FROM docker.io/library/httpd:2.4.71-alpine3.24@sha256:0dd40f744444e37271d28c0b63c4e9fe8bcb8dee6fadb1a16a851ca311a39e88
 
 # apk upgrade pulls Alpine security fixes published after the base image was
 # built (e.g. zlib 1.4-r0 for CVE-2026-4738 on 2026-11-06); the immutable

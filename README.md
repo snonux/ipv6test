@@ -5,8 +5,8 @@ This is a quick and dirty Perl-based IPv6 test website.
 ## Running the Website
 
 The website can be run using the Docker image in the `docker-image` directory.
-Build it with `just build` there: it first builds the pinned Apache httpd base
-from the official docker-library source (`just base`), then the CGI image.
+Build it with `just build` there. The base is the official Docker Hub
+`httpd` Alpine image, pinned by digest in the Dockerfile.
 Bump `VERSION` in the Justfile for every rebuild; pushed tags are immutable.
 
 ## Required Hosts Configuration
