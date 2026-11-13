@@ -8,9 +8,10 @@
 # and build under a NEW image tag (see Justfile VERSION).
 FROM docker.io/library/httpd:2.4.71-alpine3.24@sha256:0dd40f744444e37271d28c0b63c4e9fe8bcb8dee6fadb1a16a851ca311a39e88
 
-# apk upgrade pulls Alpine security fixes published after the base image was
-# built (e.g. zlib 1.4-r0 for CVE-2026-4738 on 2026-11-06); the immutable
-# image tag freezes the resulting package set.
+# apk upgrade pulls Alpine security fixes published after the pinned base
+# image was built (it upgraded nothing on 2026-11-13, but the base digest
+# stays fixed while Alpine keeps patching); the immutable image tag freezes
+# the resulting package set.
 RUN apk upgrade --no-cache && apk add --no-cache \
     perl \
     bind-tools
